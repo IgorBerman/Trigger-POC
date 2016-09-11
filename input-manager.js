@@ -1,5 +1,5 @@
 "use strict";
-const redis = require('ioredis');
+const redis = require('dy-ioredis');
 const config = require('./common/config');
 
 // const REDIS_KEY = "events";
