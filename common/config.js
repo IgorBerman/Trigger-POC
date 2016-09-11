@@ -1,14 +1,12 @@
 "use strict";
 
 var config = {};
-
-config.env = config.env || 'Dev';
+config.env = config.env || process.env.TRIGGERS_ENV || 'Dev';
 
 config.init = function () {
 
   if (this.isDev()) {
     console.log("Using Developer mode");
-    config.LISTEN_PORT = process.env.PORT || 1336;
     config.REDIS_PROPS = {host: 'hbasevm', port: '6379', db: '55'};
     config.PUSH_SERVER_INFO = {
       host: 'www.idanoshri.tk',
@@ -36,6 +34,7 @@ config.init = function () {
   }
 
   // global
+  config.LISTEN_PORT = process.env.PORT || 1336;
   config.REDIS_KEY = "events";
 }
 
