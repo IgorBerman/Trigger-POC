@@ -1,0 +1,44 @@
+"use strict";
+
+const https = require('https');
+const utils = require('./common/utils');
+const config = require('./common/config');
+
+
+module.exports = class MsgSender{
+  constructor() {
+  }
+
+  pushToUserDevice(msg, options = {}) {
+    options = utils.mergeObjects(options, config.PUSH_SERVER_INFO);
+    console.log("sending message: ", msg, "options:", options);
+    // handle response
+    var callback = function(response) {
+      var str = ''
+      response.on('data', function (chunk) {
+        str += chunk;
+      });
+      response.on('end', function () {
+        console.log("http response from push server: ", str);
+      });
+    }
+
+    // do request
+    var req = https.request(options, callback);
+    if(options['timeoutMillis']) {
+      req.on('socket', function (socket) {
+          socket.setTimeout(options['timeoutMillis']);
+          socket.on('timeout', function() {
+              console.warn("timeout request");
+              req.abort();
+          });
+      });
+    }
+    req.write(msg);
+    req.end();
+
+    req.on('error', function (e) {
+      console.error("error sending reqeust", e);
+    });
+  }
+}
