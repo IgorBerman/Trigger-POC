@@ -25,7 +25,7 @@ module.exports = class MsgSender{
 
     var sender = options['method'] == 'https' ? https : http;
     // do request
-    var req = https.request(options, callback);
+    var req = sender.request(options, callback);
     if(options['timeoutMillis']) {
       req.on('socket', function (socket) {
           socket.setTimeout(options['timeoutMillis']);
