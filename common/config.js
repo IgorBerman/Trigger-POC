@@ -9,7 +9,7 @@ config.init = function () {
     console.log("Using Developer mode");
     config.REDIS_PROPS = {host: 'hbasevm', port: '6379', db: '55'};
     config.PUSH_SERVER_INFO = {
-      method: 'https',
+      myProtocol: 'https',
       host: 'www.idanoshri.tk',
       path: '/push',
       //since we are listening on a custom port, we need to specify it by hand
@@ -24,7 +24,7 @@ config.init = function () {
     console.log("Using Production mode");
     config.REDIS_PROPS = {host: 'localhost', port: '6379', db: '55'};
     config.PUSH_SERVER_INFO = {
-      method: 'http',
+      myProtocol: 'http',
       host: '127.0.0.1',
       path: '/push',
       //since we are listening on a custom port, we need to specify it by hand

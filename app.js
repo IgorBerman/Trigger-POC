@@ -23,6 +23,7 @@ var app = express();
 // };
 
 config.init();
+console.log("config:", config);
 
 // all environments
 app.set('port', config.LISTEN_PORT);
@@ -42,7 +43,7 @@ if ('development' == app.get('env')) {
 
 // app.get('/event', event.process);
 //
-app.get('/test-sender', testSender.process)
+app.get('/test-sender', function(req, res, next) {testSender.process(res);})
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });
