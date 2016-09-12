@@ -10,8 +10,15 @@ var express = require('express')
   , path = require('path'),
   testSender = require('./routes/test-sender');
 
+require('console-stamp')(console, '[HH:MM:ss.l]');
+
 var app = express();
 
+// express.logger.format('mydate', function() {
+//     var df = require('console-stamp/node_modules/dateformat');
+//     return df(new Date(), 'HH:MM:ss.l');
+// });
+// app.use(express.logger('[:mydate]'));
 //var strftime = require('strftime');
 
 // String.prototype.startsWith = function(prefix) {
