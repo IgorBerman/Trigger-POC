@@ -5,6 +5,7 @@
 const msgpack = require('msgpack');
 const utils = require('../common/utils');
 const util = require('util');
+const config = require('../common/config');
 
 const EVENT_SET_PUSH_ID = 'dy-update-push-id-v1';
 const EVENT_APP_EXIT = 'dy-app-exit-v1';
@@ -45,7 +46,10 @@ function waitForPush () {
 }
 
 function processEvent(event) {
-  var data = msgpack.unpack(event);
+  if(config.isDev()){
+    console.log("event:",event);
+  }
+  var data = config.USE_MSG_PACK ? msgpack.unpack(event) : JSON.parse(event);
   console.log("-------------------------------------------------------");
   console.log(new Date(), "got message from queue: ", data);
   var userRecord = usersDB.get(data.user);

@@ -1,9 +1,9 @@
 "use strict";
 
 const https = require('https');
+const http = require('http');
 const utils = require('./common/utils');
 const config = require('./common/config');
-
 
 module.exports = class MsgSender{
   constructor() {
@@ -23,6 +23,7 @@ module.exports = class MsgSender{
       });
     }
 
+    var sender = options['method'] == 'https' ? https : http;
     // do request
     var req = https.request(options, callback);
     if(options['timeoutMillis']) {
@@ -42,3 +43,30 @@ module.exports = class MsgSender{
     });
   }
 }
+
+/*
+exports.sendHttp = function (msg, options) {
+
+  var callback = function(response) {
+    var str = ''
+    response.on('data', function (chunk) {
+      str += chunk;
+    });
+
+    response.on('end', function () {
+      console.log(str);
+    });
+  }
+
+  var req = http.request(options, callback);
+  if(options['timeoutMillis']) {
+    req.on('socket', function (socket) {
+        socket.setTimeout(myTimeout['timeout']);
+        socket.on('timeout', function() {
+            req.abort();
+        });
+    });
+  }
+  req.end();
+}
+*/

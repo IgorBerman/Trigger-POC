@@ -9,6 +9,7 @@ config.init = function () {
     console.log("Using Developer mode");
     config.REDIS_PROPS = {host: 'hbasevm', port: '6379', db: '55'};
     config.PUSH_SERVER_INFO = {
+      method: 'https',
       host: 'www.idanoshri.tk',
       path: '/push',
       //since we are listening on a custom port, we need to specify it by hand
@@ -18,19 +19,22 @@ config.init = function () {
       // 3 seconds timeout
       timeoutMillis: 3000,
     };
+    config.USE_MSG_PACK = false;
   } else {
     console.log("Using Production mode");
     config.REDIS_PROPS = {host: 'localhost', port: '6379', db: '55'};
     config.PUSH_SERVER_INFO = {
+      method: 'http',
       host: '127.0.0.1',
       path: '/push',
       //since we are listening on a custom port, we need to specify it by hand
-      port: '443',
+      port: '12323',
       //This is what changes the request to a POST request
       method: 'POST',
       // 3 seconds timeout
       timeoutMillis: 3000,
     };
+    config.USE_MSG_PACK = false;
   }
 
   // global
