@@ -46,12 +46,9 @@ function waitForPush () {
 }
 
 function processEvent(event) {
-  if(config.isDev()){
-    console.log("event:",event);
-  }
   var data = config.USE_MSG_PACK ? msgpack.unpack(event) : JSON.parse(event);
   console.log("-------------------------------------------------------");
-  console.log(new Date(), "got message from queue: ", data);
+  console.log("got message from queue: ", data);
   var userRecord = usersDB.get(data.user);
   switch (data.eventType) {
     case EVENT_APP_EXIT:
@@ -104,7 +101,6 @@ function processRemoveFromCart(data, userRecord) {
 
 // rate = original value / converted value
 function removeFromCartDB(purchasedItem, userRecord, productId, rate) {
-  console.log("--- ", purchasedItem['itemPrice'] || purchasedItem['value'], rate);
   userRecord.removeFromCart(productId, parseFloat(purchasedItem['quantity']), parseFloat(purchasedItem['itemPrice'] || purchasedItem['value'])*rate);
 }
 
@@ -135,8 +131,8 @@ function processPurchase(data, userRecord) {
   }
 }
 
-const MILLIS_SINCE_LAST_PURCHASE = 0; //1000 * 60 * 60 * 24; // 1 day
-const MILLIS_SINCE_LAST_CART_NOTIFICATION = 0; // 1000 * 60 * 60 * 24; // 1 day
+const MILLIS_SINCE_LAST_PURCHASE = 3000; //1000 * 60 * 60 * 24; // 1 day
+const MILLIS_SINCE_LAST_CART_NOTIFICATION = 3000; // 1000 * 60 * 60 * 24; // 1 day
 
 function getMessageToSend(userRecord) {
   var pushId = userRecord.getPushId();
