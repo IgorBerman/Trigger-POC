@@ -29,6 +29,10 @@ class UserRecord{
     this.events.set(eventTime, event);
   }
 
+  clearEvents() {
+    this.events = new Map();
+  }
+
   // getCartItem(userId, productId) {
   //   return this.cart.get(productId);
   // }

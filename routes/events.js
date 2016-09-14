@@ -24,7 +24,6 @@ const msgCompiler = new MsgCompilerClass();
 const msgSender = new MsgSenderClass();
 const inputManager = new InputManagerClass();
 
-
 exports.ProcessQueue = function() {
   waitForPush();
 }
@@ -32,16 +31,18 @@ exports.ProcessQueue = function() {
 function waitForPush () {
   try {
     inputManager.getEvent(function (err, event) {
-        if( err != null ) {
-          console.error("error from pop:", err);
-        } else if(event !== null && event.length > 1) {
-          processEvent(event);
-        }
+      if( err != null ) {
+        console.error("error fetching event:", err);
+        setTimeout(waitForPush, 2000);
+        return;
+      } else if(event !== null && event.length > 1) {
+        processEvent(event);
+      }
+      setTimeout(waitForPush, 100);
     });
   } catch (e) {
-    console.error("Unable to Parse message: ", e, e.stack || '');
-  } finally {
-    setTimeout(waitForPush, 1000);
+    console.error("Unable to Process message: ", e, e.stack || '');
+    setTimeout(waitForPush, 2000);
   }
 }
 
@@ -61,6 +62,7 @@ function processEvent(event) {
     case EVENT_PURCHASE:
       processPurchase(data, userRecord);
       userRecord.addEvent(data.millis, data);
+      userRecord.clearEvents();
       break
     case EVENT_ADD_TO_CART:
       processAddToCart(data, userRecord);
