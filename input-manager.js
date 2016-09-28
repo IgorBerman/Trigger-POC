@@ -11,7 +11,7 @@ module.exports = class InputManager{
   }
 
   makeSureRedisIsUp() {
-    if(this.redisClient == null) {
+    if(this.redisClient === null) {
       this.initRedis();
     }
   }
@@ -29,4 +29,4 @@ module.exports = class InputManager{
     this.redisClient.rpop(config.REDIS_KEY, callback);
   }
 
-}
+};

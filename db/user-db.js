@@ -76,12 +76,16 @@ class UserRecord{
   setLatestPurchase(highestPricedItem, millis) {
     this.lastPurchase = highestPricedItem;
     this.lastPurchase['millis'] = millis;
+    this.lastPurchase['sendMessageFor'] = false;
   }
   getLatestPurchase() {
     return this.lastPurchase;
   }
   didUserPurchase() {
     return this.lastPurchase != null;
+  }
+  didUserPurchaseAndWasNotMessaged() {
+    return this.lastPurchase != null && !this.lastPurchase['sendMessageFor'];
   }
   getLatestPurchaseMillis() {
     return this.lastPurchase.millis;
@@ -121,6 +125,7 @@ class UserRecord{
 
   setLastPurchaseNotificationMillis(millis) {
     this.lastPurchaseNotificationMillis = millis;
+    this.lastPurchase['sendMessageFor'] = true;
   }
 }
 

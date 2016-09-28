@@ -11,19 +11,19 @@ module.exports = class MsgSender{
 
   pushToUserDevice(msg, options = {}) {
     options = utils.mergeObjects(options, config.PUSH_SERVER_INFO);
-    console.log("sending message: ", msg, "options:", options);
+    console.log("** sending message: ", msg, "options:", options);
     // handle response
     var callback = function(response) {
-      var str = ''
+      var str = '';
       response.on('data', function (chunk) {
         str += chunk;
       });
       response.on('end', function () {
         console.log("http response from push server: ", str);
       });
-    }
+    };
 
-    var sender = options['myProtocol'] == 'https' ? https : http;
+    var sender = options['myProtocol'] === 'https' ? https : http;
     // do request
     var req = sender.request(options, callback);
     if(options['timeoutMillis']) {
@@ -42,4 +42,4 @@ module.exports = class MsgSender{
       console.error("error sending reqeust", e);
     });
   }
-}
+};

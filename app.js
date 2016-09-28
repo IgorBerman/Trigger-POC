@@ -44,13 +44,13 @@ app.use(app.router);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
-if ('development' == app.get('env')) {
+if ('development' === app.get('env')) {
   app.use(express.errorHandler());
 }
 
 // app.get('/event', event.process);
 //
-app.get('/test-sender', function(req, res, next) {testSender.process(res);})
+app.get('/test-sender', function(req, res, next) {testSender.process(req, res);});
 http.createServer(app).listen(app.get('port'), function(){
   console.log('Express server listening on port ' + app.get('port'));
 });

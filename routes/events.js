@@ -1,3 +1,4 @@
+/* jshint node: true */
 "use strict";
 /*
  * GET home page.
@@ -133,29 +134,35 @@ function processPurchase(data, userRecord) {
   }
 }
 
-const MILLIS_SINCE_LAST_PURCHASE = 3000; //1000 * 60 * 60 * 24; // 1 day
-const MILLIS_SINCE_LAST_CART_NOTIFICATION = 3000; // 1000 * 60 * 60 * 24; // 1 day
+const MILLIS_SINCE_LAST_PURCHASE = 10000; //1000 * 60 * 60 * 24; // 1 day
+const MILLIS_SINCE_LAST_CART_NOTIFICATION = 10000; // 1000 * 60 * 60 * 24; // 1 day
 
 function getMessageToSend(userRecord) {
   var pushId = userRecord.getPushId();
   if(!pushId) {
-    console.warn("user missing push ID, skipping");
+    console.warn("** user missing push ID, skipping");
     return null;
   }
 
   var msg = null;
   var nowMillis = (new Date).getTime();
   // should we send a message?
-  if(!userRecord.isCartEmpty() && (nowMillis - userRecord.getLastCartNotificationMillis() > MILLIS_SINCE_LAST_CART_NOTIFICATION)) { // there are items in the cart (not purchased)
-    var cartValue = userRecord.getCartValue();
-    var cartItems = userRecord.getCartSize();
-    console.log("cart value = ", cartValue);
-    msg = msgCompiler.getCartAbandonMessage(pushId, cartItems, cartValue);
-    userRecord.setLastCartNotificationMillis(nowMillis);
-  } else if( userRecord.didUserPurchase() && (nowMillis - userRecord.getLastPurchaseNotificationMillis()) > MILLIS_SINCE_LAST_PURCHASE) {
+  if (!userRecord.isCartEmpty()) { // there are items in the cart (not purchased)
+    if (nowMillis - userRecord.getLastCartNotificationMillis() > MILLIS_SINCE_LAST_CART_NOTIFICATION) {
+      var cartValue = userRecord.getCartValue();
+      var cartItems = userRecord.getCartSize();
+      console.log("cart value = ", cartValue);
+      msg = msgCompiler.getCartAbandonMessage(pushId, cartItems, cartValue);
+      userRecord.setLastCartNotificationMillis(nowMillis);
+    } else {
+      console.log("** cart is not empty, but not enough time has passed since last message");
+    }
+  } else if (userRecord.didUserPurchaseAndWasNotMessaged() && (nowMillis - userRecord.getLastPurchaseNotificationMillis()) > MILLIS_SINCE_LAST_PURCHASE) {
     var productId = userRecord.getLatestPurchaseProductId();
     msg = msgCompiler.getPurchaseMessage(pushId, productId);
     userRecord.setLastPurchaseNotificationMillis(nowMillis);
+  } else {
+    console.log("** decided not to send any message to the user. now = " + nowMillis + ", cartEmpty=" + userRecord.isCartEmpty() + ", lastCartNotif=" + userRecord.getLastCartNotificationMillis() + ", userPurchased=" + userRecord.didUserPurchase() + ", userMessagedAboutit=" + !userRecord.didUserPurchaseAndWasNotMessaged() + ", lastPurchaseNotif=" + userRecord.getLastPurchaseNotificationMillis());
   }
   return msg;
 }

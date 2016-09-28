@@ -1,0 +1,15 @@
+{
+  "-W002": false,
+  "curly": true,
+  "eqeqeq": true,
+  "freeze": true,
+  "futurehostile": true,
+  "nocomma": true,
+  "laxcomma": false,
+  "nonbsp": true,
+  "nonew": true,
+  "singleGroups": true,
+  "undef": true,
+  "unused": true,
+  "node": true
+}
