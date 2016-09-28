@@ -147,7 +147,7 @@ function getMessageToSend(userRecord) {
   var msg = null;
   var nowMillis = (new Date).getTime();
   // should we send a message?
-  if (!userRecord.isCartEmpty()) { // there are items in the cart (not purchased)
+  if (!userRecord.isCartEmpty() && !userRecord.wasCartMessaged()) { // there are items in the cart (not purchased)
     if (nowMillis - userRecord.getLastCartNotificationMillis() > MILLIS_SINCE_LAST_CART_NOTIFICATION) {
       var cartValue = userRecord.getCartValue();
       var cartItems = userRecord.getCartSize();
@@ -162,7 +162,7 @@ function getMessageToSend(userRecord) {
     msg = msgCompiler.getPurchaseMessage(pushId, productId);
     userRecord.setLastPurchaseNotificationMillis(nowMillis);
   } else {
-    console.log("** decided not to send any message to the user. now = " + nowMillis + ", cartEmpty=" + userRecord.isCartEmpty() + ", lastCartNotif=" + userRecord.getLastCartNotificationMillis() + ", userPurchased=" + userRecord.didUserPurchase() + ", userMessagedAboutit=" + !userRecord.didUserPurchaseAndWasNotMessaged() + ", lastPurchaseNotif=" + userRecord.getLastPurchaseNotificationMillis());
+    console.log("** decided not to send any message to the user. now = " + nowMillis + ", cartEmpty=" + userRecord.isCartEmpty() + ", cart messaged=" + userRecord.wasCartMessaged() + ", lastCartNotif=" + userRecord.getLastCartNotificationMillis() + ", userPurchased=" + userRecord.didUserPurchase() + ", userMessagedAboutit=" + !userRecord.didUserPurchaseAndWasNotMessaged() + ", lastPurchaseNotif=" + userRecord.getLastPurchaseNotificationMillis());
   }
   return msg;
 }

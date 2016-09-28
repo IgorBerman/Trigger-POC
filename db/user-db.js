@@ -119,6 +119,10 @@ class UserRecord{
     this.lastCartNotificationMillis = millis;
   }
 
+  wasCartMessaged() {
+    return this.lastCartNotificationMillis != 0 && this.lastCartNotificationMillis != null && this.lastCartNotificationMillis >= this.cart.lastCartChangeMillis;
+  }
+
   getLastPurchaseNotificationMillis() {
     return this.lastPurchaseNotificationMillis;
   }
@@ -132,6 +136,7 @@ class UserRecord{
 class Cart{
   constructor() {
     this.map = new Map();
+    this.lastCartChangeMillis = 0;
   }
 
   get(productId) {
@@ -146,10 +151,12 @@ class Cart{
   set(productId, quantity, value) {
     var cartItem = new CartItem(quantity, value);
     this.map.set(productId, cartItem);
+    this.lastCartChangeMillis = (new Date).getTime();
   }
 
   delete(productId) {
     this.map.delete(productId);
+    this.lastCartChangeMillis = (new Date).getTime();
   }
 
   size() {
